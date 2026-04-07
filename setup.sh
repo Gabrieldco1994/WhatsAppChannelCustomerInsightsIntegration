@@ -157,6 +157,53 @@ else
   echo "  Run: pac solution export --name WhatsAppChannel --path output/WhatsAppChannel.zip"
 fi
 
+# ---- Configure Security Role ----
+echo ""
+echo "[7/7] Configuring security role..."
+D365_TOKEN=$(az account get-access-token --resource "$D365_URL" --query accessToken --output tsv 2>/dev/null)
+
+if [ -n "$D365_TOKEN" ]; then
+  # Get Read privilege ID for new_whatsappchannelinstance
+  PRIV_ID=$(curl -s "${D365_URL}/api/data/v9.2/privileges" \
+    -H "Authorization: Bearer $D365_TOKEN" \
+    -H "OData-MaxVersion: 4.0" \
+    -G --data-urlencode "\$filter=name eq 'prvReadnew_whatsappchannelinstance'" \
+    --data-urlencode "\$select=privilegeid" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+print(d['value'][0]['privilegeid'] if d.get('value') else '')
+" 2>/dev/null)
+
+  if [ -n "$PRIV_ID" ]; then
+    # Find "Marketing Services User Extensible Role"
+    ROLE_ID=$(curl -s "${D365_URL}/api/data/v9.2/roles" \
+      -H "Authorization: Bearer $D365_TOKEN" \
+      -H "OData-MaxVersion: 4.0" \
+      -G --data-urlencode "\$filter=name eq 'Marketing Services User Extensible Role'" \
+      --data-urlencode "\$select=roleid" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+print(d['value'][0]['roleid'] if d.get('value') else '')
+" 2>/dev/null)
+
+    if [ -n "$ROLE_ID" ]; then
+      curl -s -w "" -X POST \
+        "${D365_URL}/api/data/v9.2/roles(${ROLE_ID})/Microsoft.Dynamics.CRM.AddPrivilegesRole" \
+        -H "Authorization: Bearer $D365_TOKEN" \
+        -H "Content-Type: application/json" \
+        -H "OData-MaxVersion: 4.0" \
+        -d "{\"Privileges\": [{\"PrivilegeId\": \"$PRIV_ID\", \"Depth\": \"3\"}]}" >/dev/null 2>&1
+      echo "  Read privilege added to 'Marketing Services User Extensible Role' (Organization level)"
+    else
+      echo "  WARNING: 'Marketing Services User Extensible Role' not found. Add Read privilege manually."
+    fi
+  else
+    echo "  WARNING: Entity not found yet. Add Read privilege after solution import."
+  fi
+else
+  echo "  WARNING: Could not get D365 token. Configure security role manually."
+fi
+
 # ---- Summary ----
 echo ""
 echo "============================================"
