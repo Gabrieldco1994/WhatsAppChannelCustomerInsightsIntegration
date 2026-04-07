@@ -1,0 +1,21 @@
+# Build outputs
+**/bin/
+**/obj/
+**/publish/
+*.zip
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Local settings (contain secrets)
+src/AzureFunction/local.settings.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp
+*.tmp
