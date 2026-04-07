@@ -47,6 +47,17 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   }
 }
 
+// ---- Blob Service + Container (required for Flex Consumption deploy) ----
+resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2023-05-01' = {
+  parent: storageAccount
+  name: 'default'
+}
+
+resource deployContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-05-01' = {
+  parent: blobService
+  name: 'app-package-${functionAppName}'
+}
+
 // ---- Application Insights ----
 resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: appInsightsName
