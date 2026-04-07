@@ -73,10 +73,20 @@ If the script didn't import automatically:
 pac solution import --path output/WhatsAppChannel.zip --activate-plugins
 ```
 
-#### d) Register the Plugin
+#### d) Build and Register the Plugin
 ```bash
-# Use Plugin Registration Tool or pac:
-pac plugin push --pluginId <GUID> --pluginFile src/Plugins/bin/Release/net462/WhatsAppACSChannel.Plugins.dll --type Assembly
+cd src/Plugins
+dotnet build -c Release
+```
+
+Get the plugin assembly ID:
+```bash
+pac org fetch --xml "<fetch><entity name='pluginassembly'><attribute name='pluginassemblyid'/><attribute name='name'/><filter><condition attribute='name' operator='like' value='%WhatsApp%'/></filter></entity></fetch>"
+```
+
+Push the plugin DLL (replace `<GUID>` with the ID from above):
+```bash
+pac plugin push --pluginId <GUID> --pluginFile bin/Release/net462/WhatsAppACSChannel.Plugins.dll --type Assembly
 ```
 
 Then register a Plugin Step:
