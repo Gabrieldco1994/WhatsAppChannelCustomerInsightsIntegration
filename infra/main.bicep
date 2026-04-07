@@ -58,6 +58,20 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
+// ---- App Service Plan (Flex Consumption) ----
+resource appServicePlan 'Microsoft.Web/serverfarms@2024-04-01' = {
+  name: planName
+  location: location
+  kind: 'functionapp'
+  sku: {
+    tier: 'FlexConsumption'
+    name: 'FC1'
+  }
+  properties: {
+    reserved: true
+  }
+}
+
 // ---- Function App (Flex Consumption) ----
 resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
   name: functionAppName
@@ -67,6 +81,7 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
     type: 'SystemAssigned'
   }
   properties: {
+    serverFarmId: appServicePlan.id
     siteConfig: {
       appSettings: [
         { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsights.properties.ConnectionString }
