@@ -89,10 +89,7 @@ Push the plugin DLL (replace `<GUID>` with the ID from above):
 pac plugin push --pluginId <GUID> --pluginFile bin/Release/net462/WhatsAppACSChannel.Plugins.dll --type Assembly
 ```
 
-Then register a Plugin Step:
-- Message: `new_WhatsAppOutbound`
-- Primary Entity: `none`
-- Step: `OutboundWhatsAppPlugin`
+Then register a Plugin Step is **not needed** — the solution already includes the Custom API binding to the plugin.
 
 #### e) Configure Channel Instance
 In D365: Settings → Customer Engagement → Channel Definitions → WhatsApp → Create Instance
