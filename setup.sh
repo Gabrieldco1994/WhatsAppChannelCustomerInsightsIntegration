@@ -81,6 +81,7 @@ echo "        Azure AD → App Registrations → $APP_NAME → API Permissions �
 # ---- Deploy Infrastructure (Bicep) ----
 echo ""
 echo "[4/7] Deploying Azure Infrastructure..."
+echo "  (This may take 2-3 minutes...)"
 DEPLOY_OUTPUT=$(az deployment group create \
   --resource-group "$RESOURCE_GROUP" \
   --template-file "$SCRIPT_DIR/infra/main.bicep" \
@@ -92,10 +93,16 @@ DEPLOY_OUTPUT=$(az deployment group create \
     d365ClientId="$APP_ID" \
     d365ClientSecret="$CLIENT_SECRET" \
   --query "properties.outputs" \
-  --output json 2>/dev/null)
+  --output json 2>&1)
 
-FUNCTION_APP_NAME=$(echo "$DEPLOY_OUTPUT" | python3 -c "import sys,json; print(json.load(sys.stdin)['functionAppName']['value'])")
-FUNCTION_HOSTNAME=$(echo "$DEPLOY_OUTPUT" | python3 -c "import sys,json; print(json.load(sys.stdin)['functionAppHostname']['value'])")
+if echo "$DEPLOY_OUTPUT" | python3 -c "import sys,json; json.load(sys.stdin)" 2>/dev/null; then
+  FUNCTION_APP_NAME=$(echo "$DEPLOY_OUTPUT" | python3 -c "import sys,json; print(json.load(sys.stdin)['functionAppName']['value'])")
+  FUNCTION_HOSTNAME=$(echo "$DEPLOY_OUTPUT" | python3 -c "import sys,json; print(json.load(sys.stdin)['functionAppHostname']['value'])")
+else
+  echo "  ERROR: Bicep deployment failed. Output:"
+  echo "$DEPLOY_OUTPUT"
+  exit 1
+fi
 
 echo "  Function App: $FUNCTION_APP_NAME"
 echo "  Hostname:     $FUNCTION_HOSTNAME"
