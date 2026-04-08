@@ -35,10 +35,28 @@ D365 Journey → Custom API → Plugin → Provider API → WhatsApp
 
 ```bash
 git clone https://github.com/Gabrieldco1994/WhatsAppChannelCustomerInsightsIntegration.git
-cd WhatsAppACSChannel
+cd WhatsAppChannelCustomerInsightsIntegration
 ```
 
-### 2. Run the setup script
+### 2. Authenticate with Azure and Power Platform
+
+**Azure CLI** — login to the tenant that contains your D365 environment:
+
+```bash
+az login --tenant <YOUR_TENANT_ID>
+az account set --subscription <YOUR_SUBSCRIPTION_ID>
+```
+
+**Power Platform CLI** — authenticate to the target D365 organization:
+
+```bash
+pac auth create --url https://<YOUR_ORG>.crm.dynamics.com
+```
+
+> 💡 You can find your Tenant ID in **Azure Portal → Azure Active Directory → Overview**.
+> Your Org URL is visible in **Power Platform Admin Center → Environments → your env → Environment URL**.
+
+### 3. Run the setup script
 
 ```bash
 ./setup.sh
