@@ -22,10 +22,12 @@ D365 Journey → Custom API → Plugin → Provider API → WhatsApp
 
 ## Prerequisites
 
-- **Azure subscription** with permissions to create resources
-- **Azure CLI** (`az`) installed and authenticated
+- **Azure AD Global Admin** (or Application Administrator) — required to create App Registrations and grant admin consent
+- **Power Platform System Administrator** — required to import solutions, create App Users, and configure security roles
+- **Azure subscription** with permissions to create resources (Contributor or Owner)
+- **Azure CLI** (`az`) installed
 - **.NET 8 SDK**
-- **Power Platform CLI** (`pac`) installed and authenticated to target D365 org
+- **Power Platform CLI** (`pac`) installed
 - **bash**, **zip**, **curl**
 - One of: Twilio account, Infobip account, or ACS resource with WhatsApp configured
 
