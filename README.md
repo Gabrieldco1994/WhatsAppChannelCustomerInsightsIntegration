@@ -1,6 +1,6 @@
-# WhatsApp Multi-Provider Integration for Dynamics 365 Customer Insights
+# WhatsApp Multi-Provider Integration for Dynamics Customer Insights Journey
 
-Custom channel for D365 Customer Insights - Journeys that enables WhatsApp messaging via **Twilio**, **Infobip**, or **Azure Communication Services (ACS)**.
+Custom channel for Customer Insights - Journeys that enables WhatsApp messaging via **Twilio**, **Infobip**, or **Azure Communication Services (ACS)**.
 
 ## Features
 
