@@ -34,7 +34,7 @@ D365 Journey → Custom API → Plugin → Provider API → WhatsApp
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-org/WhatsAppACSChannel.git
+git clone https://github.com/Gabrieldco1994/WhatsAppChannelCustomerInsightsIntegration.git
 cd WhatsAppACSChannel
 ```
 
